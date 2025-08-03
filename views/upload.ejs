@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>File Upload</title>
+  <!-- Bootstrap CSS CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+</head>
+<body>
+  <div class="container mt-5">
+    <h2 class="mb-4 text-center">Upload File & Share</h2>
+
+    <!-- Step 1: Number of Emails -->
+    <div class="mb-3 row justify-content-center">
+      <label for="numEmails" class="col-sm-4 col-form-label">How many emails to add? (max 5):</label>
+      <div class="col-sm-2">
+        <input
+          type="number"
+          id="numEmails"
+          name="numEmails"
+          min="1"
+          max="5"
+          class="form-control"
+          placeholder="1 - 5"
+        />
+      </div>
+      <div class="col-sm-2">
+        <button id="showEmailsBtn" class="btn btn-primary">Show Email Fields</button>
+      </div>
+    </div>
+
+    <!-- Upload Form (hidden initially) -->
+    <form
+      id="uploadForm"
+      action="/upload"
+      method="POST"
+      enctype="multipart/form-data"
+      style="display: none;"
+    >
+      <div class="mb-3">
+        <label for="file" class="form-label">Select File</label>
+        <input type="file" class="form-control" id="file" name="file" required />
+      </div>
+
+      <div id="emailFields" class="mb-3"></div>
+
+      <button type="submit" class="btn btn-success">Upload & Send</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap Bundle JS (includes Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    const showEmailsBtn = document.getElementById('showEmailsBtn');
+    const numEmailsInput = document.getElementById('numEmails');
+    const emailFieldsDiv = document.getElementById('emailFields');
+    const uploadForm = document.getElementById('uploadForm');
+
+    showEmailsBtn.addEventListener('click', () => {
+      const count = parseInt(numEmailsInput.value);
+      if (!count || count < 1 || count > 5) {
+        alert('Please enter a number between 1 and 5.');
+        return;
+      }
+
+      // Clear previous email inputs
+      emailFieldsDiv.innerHTML = '';
+
+      // Add email input fields dynamically with Bootstrap classes
+      for (let i = 1; i <= count; i++) {
+        const wrapperDiv = document.createElement('div');
+        wrapperDiv.className = 'mb-3';
+
+        const label = document.createElement('label');
+        label.setAttribute('for', `email${i}`);
+        label.className = 'form-label';
+        label.innerText = `Email ${i}`;
+
+        const input = document.createElement('input');
+        input.type = 'email';
+        input.name = `email${i}`;
+        input.id = `email${i}`;
+        input.className = 'form-control';
+        input.placeholder = `user${i}@example.com`;
+        input.required = true;
+
+        wrapperDiv.appendChild(label);
+        wrapperDiv.appendChild(input);
+        emailFieldsDiv.appendChild(wrapperDiv);
+      }
+
+      // Show the upload form
+      uploadForm.style.display = 'block';
+
+      // Scroll to the form
+      uploadForm.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
